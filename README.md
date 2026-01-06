@@ -2,6 +2,18 @@
 
 A modern, full-stack web application for managing barber shop appointments with both customer booking and admin schedule management features.
 
+---
+
+## 🚀 Deploy Online in 15 Minutes!
+
+Want to share this with your shop customers? Deploy it **FREE** on Render.com!
+
+📖 **[👉 See Deployment Guide](DEPLOYMENT_GUIDE.md)** - Step-by-step instructions
+
+Or run locally: `start.bat` then visit http://localhost:3000
+
+---
+
 ## Features
 
 ✨ **Customer Features:**
