@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './AppointmentForm.css';
 
 const SERVICES = [
@@ -32,7 +32,7 @@ function AppointmentForm({ onSubmitSuccess }) {
   const fetchAvailableTimes = async (date) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/available-times?date=${date}`);
+      const response = await api.get(`/api/available-times?date=${date}`);
       setAvailableTimes(response.data);
     } catch (error) {
       setMessage('Error fetching available times');
@@ -48,7 +48,7 @@ function AppointmentForm({ onSubmitSuccess }) {
     setMessage('');
 
     try {
-      await axios.post('/api/appointments', formData);
+      await api.post('/api/appointments', formData);
       setMessage('✓ Appointment booked successfully!');
       setFormData({
         customerName: '',

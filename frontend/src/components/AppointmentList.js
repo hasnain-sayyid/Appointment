@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './AppointmentList.css';
 
 function AppointmentList({ refreshTrigger }) {
@@ -24,7 +24,7 @@ function AppointmentList({ refreshTrigger }) {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/appointments?date=${selectedDate}`);
+      const response = await api.get(`/api/appointments?date=${selectedDate}`);
       setAppointments(response.data);
     } catch (error) {
       setMessage('Error fetching appointments');
@@ -37,7 +37,7 @@ function AppointmentList({ refreshTrigger }) {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
       try {
-        await axios.delete(`/api/appointments/${id}`);
+        await api.delete(`/api/appointments/${id}`);
         setMessage('✓ Appointment deleted successfully!');
         setTimeout(fetchAppointments, 500);
       } catch (error) {
@@ -58,7 +58,7 @@ function AppointmentList({ refreshTrigger }) {
 
   const handleEditSave = async (id) => {
     try {
-      await axios.put(`/api/appointments/${id}`, editFormData);
+      await api.put(`/api/appointments/${id}`, editFormData);
       setMessage('✓ Appointment updated successfully!');
       setEditingId(null);
       setTimeout(fetchAppointments, 500);
