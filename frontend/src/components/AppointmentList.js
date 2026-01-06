@@ -24,7 +24,8 @@ function AppointmentList({ refreshTrigger }) {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/api/appointments?date=${selectedDate}`);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await axios.get(`${apiUrl}/api/appointments?date=${selectedDate}`);
       setAppointments(response.data);
     } catch (error) {
       setMessage('Error fetching appointments');
@@ -37,7 +38,8 @@ function AppointmentList({ refreshTrigger }) {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
       try {
-        await api.delete(`/api/appointments/${id}`);
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        await axios.delete(`${apiUrl}/api/appointments/${id}`);
         setMessage('✓ Appointment deleted successfully!');
         setTimeout(fetchAppointments, 500);
       } catch (error) {
@@ -58,7 +60,8 @@ function AppointmentList({ refreshTrigger }) {
 
   const handleEditSave = async (id) => {
     try {
-      await api.put(`/api/appointments/${id}`, editFormData);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      await axios.put(`${apiUrl}/api/appointments/${id}`, editFormData);
       setMessage('✓ Appointment updated successfully!');
       setEditingId(null);
       setTimeout(fetchAppointments, 500);
