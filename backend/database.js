@@ -1,8 +1,17 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'appointments.db');
-const db = new sqlite3.Database(dbPath);
+// Use in-memory database on Render (no file system access)
+// Use file-based database in development
+const isProduction = process.env.NODE_ENV === 'production';
+const dbPath = isProduction ? ':memory:' : path.join(__dirname, 'appointments.db');
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('Database connection error:', err.message);
+  } else {
+    console.log('Database connected successfully');
+  }
+});
 
 // Available time slots (9 AM to 5 PM)
 const TIME_SLOTS = [
@@ -34,9 +43,9 @@ module.exports = {
       )
     `, (err) => {
       if (err) {
-        console.error('Error creating table:', err);
+        console.error('Error creating table:', err.message);
       } else {
-        console.log('Database initialized');
+        console.log('Database table initialized successfully');
       }
     });
   },
