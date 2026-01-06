@@ -32,8 +32,7 @@ function AppointmentForm({ onSubmitSuccess }) {
   const fetchAvailableTimes = async (date) => {
     setLoading(true);
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-      const response = await axios.get(`${apiUrl}/api/available-times?date=${date}`);
+      const response = await api.get(`/api/available-times?date=${date}`);
       setAvailableTimes(response.data);
     } catch (error) {
       setMessage('Error fetching available times');
