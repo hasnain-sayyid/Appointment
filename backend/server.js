@@ -192,10 +192,10 @@ app.get('/api/available-times', (req, res) => {
   }
 });
 
-app.get('/api/services', (req, res) => {
+//app.get('/api/services', (req, res) => {
   try {
     if (!db || typeof db.getServices !== 'function') {
-      return res.status(500).json({ error: 'Database not initialized' });
+      return res.status(500).json({ error: 'Database not initialized' //});
     }
 
     const services = db.getServices();
