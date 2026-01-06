@@ -240,6 +240,10 @@ server.on('error', (error) => {
   }
   process.exit(1);
 });
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
