@@ -4,6 +4,7 @@ const db = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use(express.json());
 
 // Global error handlers - catches crashes before they kill the server
 process.on('uncaughtException', (error) => {
