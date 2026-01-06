@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: appointment-frontend
+    env: node
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run serve
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REACT_APP_API_URL
+        value: https://barber-appointment-backend.onrender.com
+    healthCheckPath: /
+    autoDeploy: true
