@@ -1,5 +1,5 @@
 {
-  "buildCommand": "CI=false npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "build",
   "installCommand": "npm install",
   "rewrites": [
@@ -7,5 +7,8 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "REACT_APP_API_URL": "@react_app_api_url"
+  }
 }
