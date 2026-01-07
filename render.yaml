@@ -9,6 +9,6 @@ services:
       - key: NODE_ENV
         value: production
       - key: REACT_APP_API_URL
-        value: https://barber-appointment-backend.onrender.com
+        value: https://appointment-5lm4.onrender.com
     healthCheckPath: /
     autoDeploy: true

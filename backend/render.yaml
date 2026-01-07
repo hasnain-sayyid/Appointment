@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: barber-appointment-backend
+    name: appointment-backend
     env: node
     plan: free
     buildCommand: npm install
