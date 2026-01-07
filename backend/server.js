@@ -38,6 +38,41 @@ app.get('/api/services', (req, res) => {
   res.json(services);
 });
 
+app.get('/api/available-times', (req, res) => {
+  console.log('GET /api/available-times');
+  const times = [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'
+  ];
+  res.json(times);
+});
+
+app.post('/api/appointments', (req, res) => {
+  console.log('POST /api/appointments');
+  const { customerName, customerPhone, date, time, service, notes } = req.body;
+  
+  if (!customerName || !customerPhone || !date || !time || !service) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+  
+  res.json({
+    id: Math.floor(Math.random() * 10000),
+    customerName,
+    customerPhone,
+    date,
+    time,
+    service,
+    notes,
+    createdAt: new Date()
+  });
+});
+
+app.get('/api/appointments', (req, res) => {
+  console.log('GET /api/appointments');
+  res.json([]);
+});
+
 // Listen on all interfaces
 app.listen(PORT, '0.0.0.0', () => {
   console.log('✅ Server listening on port ' + PORT);
