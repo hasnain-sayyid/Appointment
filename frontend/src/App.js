@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <h1>✂️ Barber Shop</h1>
+          <img src="/logo.svg" alt="Sharp Culture Barbershop" style={{height: '80px', width: 'auto', marginBottom: '10px'}} />
           <p>Premium Grooming Services</p>
         </div>
         <nav className="nav-buttons">
