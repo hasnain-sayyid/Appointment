@@ -17,7 +17,19 @@ function App() {
       <nav className="nav-buttons" style={{textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>
         <button 
           className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}
-          onClick={() => setCurrentPage('home')}
+          onClick={() => {
+            setCurrentPage('home');
+            // Smooth scroll to booking form after a short delay
+            setTimeout(() => {
+              const bookingSection = document.getElementById('booking-section');
+              if (bookingSection) {
+                bookingSection.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }, 100);
+          }}
         >
           Book Appointment
         </button>

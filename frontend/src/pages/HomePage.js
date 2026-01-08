@@ -32,7 +32,9 @@ function HomePage() {
         </div>
       </div>
 
-      <AppointmentForm onSubmitSuccess={handleSubmitSuccess} />
+      <div id="booking-section">
+        <AppointmentForm onSubmitSuccess={handleSubmitSuccess} />
+      </div>
     </div>
   );
 }
