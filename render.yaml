@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: appointment
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+    healthCheckPath: /health
+    autoDeploy: true
