@@ -35,7 +35,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>&copy; 2026 Barber Shop. All rights reserved.</p>
+        <p>&copy; 2026 Sharp Culture Barbershop. All rights reserved.</p>
       </footer>
     </div>
   );

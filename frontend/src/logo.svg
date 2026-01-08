@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <!-- Barber pole -->
+  <rect x="320" y="50" width="20" height="80" fill="#333" rx="10"/>
+  <path d="M325 55 L335 75 L325 95 L335 115 L325 125" stroke="#D4AF37" stroke-width="3" fill="none"/>
+  <path d="M335 55 L325 75 L335 95 L325 115 L335 125" stroke="white" stroke-width="2" fill="none"/>
+  
+  <!-- Man's head silhouette -->
+  <path d="M80 50 Q120 40 140 60 Q145 70 140 90 Q135 110 120 120 Q100 125 85 115 Q70 105 65 85 Q60 65 80 50" fill="#333"/>
+  <!-- Hair -->
+  <path d="M80 50 Q90 35 110 40 Q130 45 140 60 Q135 50 120 45 Q100 40 80 50" fill="#333"/>
+  <!-- Beard -->
+  <path d="M85 115 Q95 130 110 135 Q120 140 130 135 Q135 125 140 115 Q135 120 120 125 Q100 130 85 115" fill="#333"/>
+  
+  <!-- Scissors -->
+  <g transform="translate(200, 80) rotate(-30)">
+    <circle cx="5" cy="5" r="8" fill="none" stroke="#333" stroke-width="2"/>
+    <circle cx="5" cy="25" r="8" fill="none" stroke="#333" stroke-width="2"/>
+    <line x1="13" y1="13" x2="35" y2="35" stroke="#333" stroke-width="3"/>
+    <line x1="13" y1="17" x2="35" y2="39" stroke="#333" stroke-width="3"/>
+    <circle cx="9" cy="9" r="2" fill="#333"/>
+    <circle cx="9" cy="21" r="2" fill="#333"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="180" text-anchor="middle" font-family="Arial Black" font-size="48" font-weight="900" fill="#333">SHARP</text>
+  <text x="200" y="220" text-anchor="middle" font-family="Arial Black" font-size="32" font-weight="900" fill="#333">CULTURE</text>
+  <text x="200" y="250" text-anchor="middle" font-family="Arial" font-size="16" font-weight="normal" fill="#333" letter-spacing="4px">BARBERSHOP</text>
+</svg>

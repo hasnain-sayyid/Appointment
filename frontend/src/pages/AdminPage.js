@@ -12,7 +12,7 @@ function AdminPage() {
   return (
     <div className="admin-page">
       <div className="admin-header">
-        <h2>Barber Shop Schedule</h2>
+        <h2>Sharp Culture Schedule</h2>
         <p>Manage all appointments and view the daily schedule</p>
       </div>
 
