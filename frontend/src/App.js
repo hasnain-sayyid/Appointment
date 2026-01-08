@@ -10,24 +10,24 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <img src="/logo.svg" alt="Sharp Culture Barbershop" style={{height: '80px', width: 'auto', marginBottom: '10px'}} />
-          <p>Premium Grooming Services</p>
+          <img src="/logo.svg" alt="Sharp Culture Barbershop" style={{height: '150px', width: 'auto'}} />
         </div>
-        <nav className="nav-buttons">
-          <button 
-            className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('home')}
-          >
-            Book Appointment
-          </button>
-          <button 
-            className={`nav-btn ${currentPage === 'admin' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('admin')}
-          >
-            Schedule
-          </button>
-        </nav>
       </header>
+
+      <nav className="nav-buttons" style={{textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>
+        <button 
+          className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}
+          onClick={() => setCurrentPage('home')}
+        >
+          Book Appointment
+        </button>
+        <button 
+          className={`nav-btn ${currentPage === 'admin' ? 'active' : ''}`}
+          onClick={() => setCurrentPage('admin')}
+        >
+          Schedule
+        </button>
+      </nav>
 
       <main className="app-main">
         {currentPage === 'home' && <HomePage />}
