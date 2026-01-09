@@ -13,6 +13,7 @@ function AppointmentForm({ onSubmitSuccess }) {
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
+    customerEmail: '',
     date: '',
     time: '',
     service: '',
@@ -116,6 +117,19 @@ function AppointmentForm({ onSubmitSuccess }) {
             value={formData.customerPhone}
             onChange={handleChange}
             placeholder="(555) 123-4567"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="customerEmail">Email Address *</label>
+          <input
+            type="email"
+            id="customerEmail"
+            name="customerEmail"
+            value={formData.customerEmail}
+            onChange={handleChange}
+            placeholder="john@example.com"
             required
           />
         </div>

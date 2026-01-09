@@ -128,6 +128,13 @@ function AppointmentList({ refreshTrigger }) {
                     placeholder="Phone"
                   />
                   <input
+                    type="email"
+                    name="customerEmail"
+                    value={editFormData.customerEmail || ''}
+                    onChange={handleEditChange}
+                    placeholder="Email"
+                  />
+                  <input
                     type="time"
                     name="time"
                     value={editFormData.time}
@@ -168,6 +175,9 @@ function AppointmentList({ refreshTrigger }) {
                   <div className="card-body">
                     <p className="customer-name">{appointment.customerName}</p>
                     <p className="customer-phone">📞 {appointment.customerPhone}</p>
+                    {appointment.customerEmail && (
+                      <p className="customer-email">✉️ {appointment.customerEmail}</p>
+                    )}
                     {appointment.notes && (
                       <p className="notes">📝 {appointment.notes}</p>
                     )}
