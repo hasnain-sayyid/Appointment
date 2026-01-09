@@ -58,7 +58,17 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <img src="/logo.svg" alt="SHARP CULTURE BARBERSHOP" style={{height: '150px', width: 'auto'}} />
+          <h1 style={{
+            color: '#D4AF37',
+            fontSize: '3em',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            margin: '20px 0',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+            letterSpacing: '3px'
+          }}>
+            SHARP CULTURE BARBERSHOP
+          </h1>
           {isAuthenticated && (
             <div style={{
               position: 'absolute',
