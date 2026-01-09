@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../api';
 import './AppointmentForm.css';
 
@@ -23,20 +23,31 @@ function AppointmentForm({ onSubmitSuccess }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  // Load available times when date changes or component mounts with a date
+  useEffect(() => {
+    if (formData.date) {
+      fetchAvailableTimes(formData.date);
+    }
+  }, [formData.date]);
+
   const handleDateChange = (e) => {
     const date = e.target.value;
     setFormData({ ...formData, date, time: '' });
-    fetchAvailableTimes(date);
+    // fetchAvailableTimes will be called by useEffect
   };
 
   const fetchAvailableTimes = async (date) => {
+    if (!date) return;
+    
     setLoading(true);
     try {
-      const response = await api.get(`/api/available-times?date=${date}`);
+      // For now, just return all available times (not filtered by date)
+      const response = await api.get(`/api/available-times`);
       setAvailableTimes(response.data);
     } catch (error) {
       setMessage('Error fetching available times');
       console.error('Error:', error);
+      setAvailableTimes([]);
     } finally {
       setLoading(false);
     }
