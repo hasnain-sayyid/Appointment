@@ -54,5 +54,46 @@ app.get('/api/appointments', (req, res) => {
   }
 });
 
+// Update appointment
+app.put('/api/appointments/:id', (req, res) => {
+  const { id } = req.params;
+  const { customerName, customerPhone, date, time, service, notes } = req.body;
+  
+  const index = appointments.findIndex(apt => apt.id == id);
+  if (index === -1) {
+    return res.status(404).json({ message: 'Appointment not found' });
+  }
+  
+  appointments[index] = {
+    ...appointments[index],
+    customerName,
+    customerPhone,
+    date,
+    time,
+    service,
+    notes: notes || '',
+    updatedAt: new Date().toISOString()
+  };
+  
+  console.log('Updated appointment:', appointments[index]);
+  res.json({ status: 'success', appointment: appointments[index] });
+});
+
+// Delete appointment
+app.delete('/api/appointments/:id', (req, res) => {
+  const { id } = req.params;
+  
+  const index = appointments.findIndex(apt => apt.id == id);
+  if (index === -1) {
+    return res.status(404).json({ message: 'Appointment not found' });
+  }
+  
+  const deleted = appointments.splice(index, 1)[0];
+  console.log('Deleted appointment:', deleted);
+  console.log('Remaining appointments:', appointments.length);
+  
+  res.json({ status: 'success', deleted: deleted });
+});
+
 app.listen(PORT, '0.0.0.0', () => console.log('Backend running on ' + PORT));
 
