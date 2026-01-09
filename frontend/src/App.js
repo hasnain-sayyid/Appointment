@@ -58,7 +58,7 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <img src="/logo.svg" alt="Sharp Culture Barbershop" style={{height: '150px', width: 'auto'}} />
+          <img src="/sharp-culture-logo.svg" alt="SHARP CULTURE BARBERSHOP" style={{height: '150px', width: 'auto'}} />
           {isAuthenticated && (
             <div style={{
               position: 'absolute',
@@ -149,7 +149,7 @@ function App() {
       )}
 
       <footer className="app-footer">
-        <p>&copy; 2026 Sharp Culture Barbershop. All rights reserved.</p>
+        <p>&copy; 2026 SHARP CULTURE BARBERSHOP. All rights reserved.</p>
       </footer>
     </div>
   );

@@ -28,7 +28,7 @@ function AdminPage() {
   return (
     <div className="admin-page">
       <div className="admin-header">
-        <h2>Sharp Culture Admin</h2>
+        <h2>SHARP CULTURE BARBERSHOP - Admin Panel</h2>
         <p>Comprehensive business management tools</p>
       </div>
 

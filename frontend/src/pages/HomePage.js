@@ -10,7 +10,7 @@ function HomePage() {
   return (
     <div className="home-page">
       <div className="info-section">
-        <h2>Welcome to Sharp Culture Barbershop</h2>
+        <h2>Welcome to SHARP CULTURE BARBERSHOP</h2>
         <p>Book your appointment in just a few clicks. We offer premium grooming services with experienced barbers.</p>
         
         <div className="services-showcase">
