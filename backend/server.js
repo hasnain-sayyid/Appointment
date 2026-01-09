@@ -1,10 +1,83 @@
 const express = require('express');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // In-memory storage for appointments
 let appointments = [];
+
+// Email configuration
+const transporter = nodemailer.createTransporter({
+  service: 'gmail',
+  auth: {
+    user: 'sharpculture.barbershop@gmail.com', // Demo email (you'd use environment variables in production)
+    pass: 'demo_app_password' // App-specific password (would be in environment variables)
+  }
+});
+
+// Email templates
+const createAppointmentEmailHTML = (appointment) => {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px;">
+      <div style="background: white; border-radius: 10px; padding: 30px;">
+        <h1 style="color: #D4AF37; text-align: center; margin-bottom: 30px;">
+          🏪 SHARP CULTURE BARBERSHOP
+        </h1>
+        <h2 style="color: #333; border-bottom: 2px solid #D4AF37; padding-bottom: 10px;">
+          ✅ New Appointment Booked
+        </h2>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #333; margin-top: 0;">Customer Details:</h3>
+          <p><strong>Name:</strong> ${appointment.customerName}</p>
+          <p><strong>Phone:</strong> ${appointment.customerPhone}</p>
+          <p><strong>Email:</strong> ${appointment.customerEmail}</p>
+        </div>
+
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #333; margin-top: 0;">Appointment Details:</h3>
+          <p><strong>Service:</strong> ${appointment.service}</p>
+          <p><strong>Date:</strong> ${appointment.date}</p>
+          <p><strong>Time:</strong> ${appointment.time}</p>
+          ${appointment.notes ? `<p><strong>Notes:</strong> ${appointment.notes}</p>` : ''}
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+          <p style="color: #666; font-size: 14px;">
+            Appointment ID: #${appointment.id}<br>
+            Booked on: ${appointment.createdAt}
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+// Function to send appointment notification email
+const sendAppointmentEmail = async (appointment) => {
+  try {
+    const mailOptions = {
+      from: 'SHARP CULTURE BARBERSHOP <sharpculture.barbershop@gmail.com>',
+      to: 'hasnain.sayyid@pursuit.org',
+      subject: `🏪 New Appointment - ${appointment.customerName} (${appointment.date} at ${appointment.time})`,
+      html: createAppointmentEmailHTML(appointment)
+    };
+
+    // Note: In demo mode, we'll just log the email instead of actually sending it
+    console.log('📧 Email would be sent:', mailOptions.subject);
+    console.log('📧 To:', mailOptions.to);
+    console.log('📧 Customer:', appointment.customerName, appointment.customerEmail);
+    
+    // Uncomment below for actual email sending (requires real email credentials)
+    // await transporter.sendMail(mailOptions);
+    
+    return { success: true, message: 'Email notification logged (demo mode)' };
+  } catch (error) {
+    console.error('❌ Email sending failed:', error);
+    return { success: false, message: error.message };
+  }
+};
 
 app.use(cors());
 app.use(express.json());
@@ -20,13 +93,14 @@ app.get('/api/services', (req, res) => res.json([
 
 app.get('/api/available-times', (req, res) => res.json(['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']));
 
-app.post('/api/appointments', (req, res) => {
-  const { customerName, customerPhone, date, time, service, notes } = req.body;
+app.post('/api/appointments', async (req, res) => {
+  const { customerName, customerPhone, customerEmail, date, time, service, notes } = req.body;
   
   const newAppointment = {
     id: Date.now(),
     customerName,
     customerPhone,
+    customerEmail,
     date,
     time,
     service,
@@ -38,7 +112,15 @@ app.post('/api/appointments', (req, res) => {
   console.log('New appointment created:', newAppointment);
   console.log('Total appointments:', appointments.length);
   
-  res.json({ id: newAppointment.id, status: 'success' });
+  // Send email notification
+  const emailResult = await sendAppointmentEmail(newAppointment);
+  console.log('Email notification result:', emailResult);
+  
+  res.json({ 
+    id: newAppointment.id, 
+    status: 'success',
+    emailSent: emailResult.success
+  });
 });
 
 app.get('/api/appointments', (req, res) => {
@@ -57,7 +139,7 @@ app.get('/api/appointments', (req, res) => {
 // Update appointment
 app.put('/api/appointments/:id', (req, res) => {
   const { id } = req.params;
-  const { customerName, customerPhone, date, time, service, notes } = req.body;
+  const { customerName, customerPhone, customerEmail, date, time, service, notes } = req.body;
   
   const index = appointments.findIndex(apt => apt.id == id);
   if (index === -1) {
@@ -68,6 +150,7 @@ app.put('/api/appointments/:id', (req, res) => {
     ...appointments[index],
     customerName,
     customerPhone,
+    customerEmail,
     date,
     time,
     service,
@@ -132,9 +215,9 @@ app.get('/api/customers', (req, res) => {
 
 // Export appointments as CSV
 app.get('/api/export/csv', (req, res) => {
-  const csvHeader = 'Date,Time,Customer Name,Phone,Service,Notes,Created At\n';
+  const csvHeader = 'Date,Time,Customer Name,Phone,Email,Service,Notes,Created At\n';
   const csvRows = appointments.map(apt => {
-    return `"${apt.date}","${apt.time}","${apt.customerName}","${apt.customerPhone}","${apt.service}","${apt.notes || ''}","${apt.createdAt}"`;
+    return `"${apt.date}","${apt.time}","${apt.customerName}","${apt.customerPhone}","${apt.customerEmail || ''}","${apt.service}","${apt.notes || ''}","${apt.createdAt}"`;
   }).join('\n');
   
   const csv = csvHeader + csvRows;
