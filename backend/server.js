@@ -144,5 +144,57 @@ app.get('/api/export/csv', (req, res) => {
   res.send(csv);
 });
 
+// Admin authentication endpoints
+const ADMIN_CREDENTIALS = {
+  username: 'admin',
+  password: 'barbershop2026'
+};
+
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body;
+  
+  if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+    const sessionToken = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    res.json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        username: ADMIN_CREDENTIALS.username,
+        role: 'admin',
+        sessionToken,
+        loginTime: new Date().toISOString()
+      }
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'Invalid username or password'
+    });
+  }
+});
+
+app.post('/api/auth/verify', (req, res) => {
+  const { sessionToken, username } = req.body;
+  
+  // Basic session validation (in production, use proper JWT or database sessions)
+  if (sessionToken && username === ADMIN_CREDENTIALS.username) {
+    res.json({
+      success: true,
+      valid: true,
+      user: {
+        username: ADMIN_CREDENTIALS.username,
+        role: 'admin'
+      }
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      valid: false,
+      message: 'Invalid session'
+    });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => console.log('Backend running on ' + PORT));
 
