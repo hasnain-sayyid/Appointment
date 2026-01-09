@@ -5,30 +5,90 @@
 }
 
 .admin-header {
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 60px rgba(0, 0, 0, 0.15);
   text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .admin-header h2 {
-  color: #333;
-  font-size: 2em;
-  margin-bottom: 10px;
+  color: #2c2c2c;
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .admin-header p {
-  color: #666;
-  font-size: 1.05em;
+  color: #555;
+  font-size: 1.3em;
+  font-weight: 400;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+  padding: 16px 30px;
+  border: 2px solid transparent;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #2c2c2c;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.tab-btn.active {
+  background: linear-gradient(45deg, #D4AF37, #F4D03F);
+  color: #2c2c2c;
+  border-color: #D4AF37;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.admin-content {
+  min-height: 500px;
 }
 
 @media (max-width: 768px) {
   .admin-header {
-    padding: 20px;
+    padding: 30px 20px;
   }
 
   .admin-header h2 {
-    font-size: 1.6em;
+    font-size: 2em;
+  }
+  
+  .admin-tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .tab-btn {
+    text-align: center;
   }
 }

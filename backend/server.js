@@ -95,5 +95,54 @@ app.delete('/api/appointments/:id', (req, res) => {
   res.json({ status: 'success', deleted: deleted });
 });
 
+// Get customers with appointment history
+app.get('/api/customers', (req, res) => {
+  const customerMap = {};
+  
+  appointments.forEach(apt => {
+    const customerId = apt.customerPhone; // Using phone as unique ID
+    
+    if (!customerMap[customerId]) {
+      customerMap[customerId] = {
+        id: customerId,
+        name: apt.customerName,
+        phone: apt.customerPhone,
+        appointments: []
+      };
+    }
+    
+    customerMap[customerId].appointments.push({
+      id: apt.id,
+      date: apt.date,
+      time: apt.time,
+      service: apt.service,
+      notes: apt.notes
+    });
+  });
+  
+  // Sort appointments by date for each customer
+  Object.values(customerMap).forEach(customer => {
+    customer.appointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+  });
+  
+  const customers = Object.values(customerMap);
+  console.log(`Returning ${customers.length} customers`);
+  res.json(customers);
+});
+
+// Export appointments as CSV
+app.get('/api/export/csv', (req, res) => {
+  const csvHeader = 'Date,Time,Customer Name,Phone,Service,Notes,Created At\n';
+  const csvRows = appointments.map(apt => {
+    return `"${apt.date}","${apt.time}","${apt.customerName}","${apt.customerPhone}","${apt.service}","${apt.notes || ''}","${apt.createdAt}"`;
+  }).join('\n');
+  
+  const csv = csvHeader + csvRows;
+  
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename="appointments.csv"');
+  res.send(csv);
+});
+
 app.listen(PORT, '0.0.0.0', () => console.log('Backend running on ' + PORT));
 
