@@ -81,10 +81,30 @@ const sendAppointmentEmail = async (appointment) => {
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://appointment-frontend.onrender.com', 'https://appointment-5lm4.onrender.com']
-    : ['http://localhost:3000', 'http://localhost:3001'],
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = process.env.NODE_ENV === 'production' 
+      ? [
+          'https://appointment-scheduler-sepia.vercel.app',
+          'https://frontend-blue-seven-42.vercel.app',
+          'https://appointment-frontend.onrender.com', 
+          'https://appointment-5lm4.onrender.com'
+        ]
+      : ['http://localhost:3000', 'http://localhost:3001'];
+    
+    // Allow all Vercel domains
+    if (origin.includes('.vercel.app') || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
 
 app.use(cors(corsOptions));
@@ -132,7 +152,11 @@ app.get('/api/services', (req, res) => res.json([
   { id: 4, name: 'Beard Trim', duration: 15, price: 10 }
 ]));
 
-app.get('/api/available-times', (req, res) => res.json(['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']));
+app.get('/api/available-times', (req, res) => {
+  console.log('Available times requested by:', req.headers.origin || req.headers.host);
+  const times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
+  res.json(times);
+});
 
 app.post('/api/appointments', async (req, res) => {
   const { customerName, customerPhone, customerEmail, date, time, service, notes } = req.body;
