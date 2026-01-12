@@ -1,1 +1,167 @@
-import React, { useState, useEffect } from 'react';\nimport './App.css';\nimport HomePage from './pages/HomePage';\nimport AdminPage from './pages/AdminPage';\nimport AdminLogin from './components/AdminLogin';\n\nfunction App() {\n  const [currentPage, setCurrentPage] = useState('home');\n  const [isAuthenticated, setIsAuthenticated] = useState(false);\n  const [showAdminLogin, setShowAdminLogin] = useState(false);\n  const [adminCredentials, setAdminCredentials] = useState(null);\n\n  // Check if admin is already authenticated on app load\n  useEffect(() => {\n    const storedCredentials = localStorage.getItem('adminAuth');\n    if (storedCredentials) {\n      try {\n        const credentials = JSON.parse(storedCredentials);\n        const now = Date.now();\n        // Check if session hasn't expired (24 hours)\n        if (credentials.timestamp && (now - credentials.timestamp) < 24 * 60 * 60 * 1000) {\n          setIsAuthenticated(true);\n          setAdminCredentials(credentials);\n        } else {\n          // Clear expired session\n          localStorage.removeItem('adminAuth');\n        }\n      } catch (error) {\n        console.error('Error parsing admin credentials:', error);\n        localStorage.removeItem('adminAuth');\n      }\n    }\n  }, []);\n\n  const handleLogin = (credentials) => {\n    setIsAuthenticated(true);\n    setAdminCredentials(credentials);\n    setShowAdminLogin(false);\n    setCurrentPage('admin');\n  };\n\n  const handleLogout = () => {\n    setIsAuthenticated(false);\n    setAdminCredentials(null);\n    localStorage.removeItem('adminAuth');\n    setCurrentPage('home');\n  };\n\n  const handleScheduleClick = () => {\n    if (isAuthenticated) {\n      setCurrentPage('admin');\n    } else {\n      setShowAdminLogin(true);\n    }\n  };\n\n  return (\n    <div className=\"App\">\n      <header className=\"app-header\">\n        <div className=\"header-content\">\n          <h1 style={{\n            color: '#D4AF37',\n            fontSize: '3em',\n            fontWeight: 'bold',\n            textAlign: 'center',\n            margin: '20px 0',\n            textShadow: '2px 2px 4px rgba(0,0,0,0.3)',\n            letterSpacing: '3px'\n          }}>\n            SHARP CULTURE BARBERSHOP\n          </h1>\n          {isAuthenticated && (\n            <div style={{\n              position: 'absolute',\n              top: '20px',\n              right: '20px',\n              display: 'flex',\n              alignItems: 'center',\n              gap: '15px',\n              color: '#D4AF37',\n              fontSize: '14px'\n            }}>\n              <span>Welcome, {adminCredentials?.username}</span>\n              <button\n                onClick={handleLogout}\n                style={{\n                  padding: '8px 16px',\n                  background: 'rgba(212, 175, 55, 0.2)',\n                  color: '#D4AF37',\n                  border: '1px solid #D4AF37',\n                  borderRadius: '8px',\n                  cursor: 'pointer',\n                  fontSize: '12px',\n                  textTransform: 'uppercase',\n                  letterSpacing: '0.5px'\n                }}\n              >\n                Logout\n              </button>\n            </div>\n          )}\n        </div>\n      </header>\n\n      <nav className=\"nav-buttons\" style={{textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>\n        <button \n          className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}\n          onClick={() => {\n            setCurrentPage('home');\n            setTimeout(() => {\n              const bookingSection = document.getElementById('booking-section');\n              if (bookingSection) {\n                bookingSection.scrollIntoView({ \n                  behavior: 'smooth',\n                  block: 'start'\n                });\n              }\n            }, 100);\n          }}\n        >\n          Book Appointment\n        </button>\n        <button \n          className={`nav-btn ${currentPage === 'admin' && isAuthenticated ? 'active' : ''}`}\n          onClick={handleScheduleClick}\n        >\n          {isAuthenticated ? 'Admin Panel' : 'Staff Login'}\n        </button>\n      </nav>\n\n      <main className=\"app-main\">\n        {currentPage === 'home' && <HomePage />}\n        {currentPage === 'admin' && isAuthenticated && <AdminPage />}\n        {currentPage === 'admin' && !isAuthenticated && (\n          <div style={{\n            textAlign: 'center',\n            padding: '60px 20px',\n            color: '#666'\n          }}>\n            <h2>Access Restricted</h2>\n            <p>Please log in to access the admin panel.</p>\n            <button \n              className=\"nav-btn\"\n              onClick={() => setShowAdminLogin(true)}\n              style={{marginTop: '20px'}}\n            >\n              Staff Login\n            </button>\n          </div>\n        )}\n      </main>\n\n      {showAdminLogin && (\n        <AdminLogin\n          onLogin={handleLogin}\n          onClose={() => setShowAdminLogin(false)}\n        />\n      )}\n\n      <footer className=\"app-footer\">\n        <p>&copy; 2026 SHARP CULTURE BARBERSHOP. All rights reserved.</p>\n      </footer>\n    </div>\n  );\n}\n\nexport default App;"
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import HomePage from './pages/HomePage';
+import AdminPage from './pages/AdminPage';
+import AdminLogin from './components/AdminLogin';
+
+function App() {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [adminCredentials, setAdminCredentials] = useState(null);
+
+  // Check if admin is already authenticated on app load
+  useEffect(() => {
+    const storedCredentials = localStorage.getItem('adminAuth');
+    if (storedCredentials) {
+      try {
+        const credentials = JSON.parse(storedCredentials);
+        const now = Date.now();
+        // Check if session hasn't expired (24 hours)
+        if (credentials.timestamp && (now - credentials.timestamp) < 24 * 60 * 60 * 1000) {
+          setIsAuthenticated(true);
+          setAdminCredentials(credentials);
+        } else {
+          // Clear expired session
+          localStorage.removeItem('adminAuth');
+        }
+      } catch (error) {
+        console.error('Error parsing admin credentials:', error);
+        localStorage.removeItem('adminAuth');
+      }
+    }
+  }, []);
+
+  const handleLogin = (credentials) => {
+    setIsAuthenticated(true);
+    setAdminCredentials(credentials);
+    setShowAdminLogin(false);
+    setCurrentPage('admin');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setAdminCredentials(null);
+    localStorage.removeItem('adminAuth');
+    setCurrentPage('home');
+  };
+
+  const handleScheduleClick = () => {
+    if (isAuthenticated) {
+      setCurrentPage('admin');
+    } else {
+      setShowAdminLogin(true);
+    }
+  };
+
+  return (
+    <div className="App">
+      <header className="app-header">
+        <div className="header-content">
+          <h1 style={{
+            color: '#D4AF37',
+            fontSize: '3em',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            margin: '20px 0',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+            letterSpacing: '3px'
+          }}>
+            SHARP CULTURE BARBERSHOP
+          </h1>
+          {isAuthenticated && (
+            <div style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '15px',
+              color: '#D4AF37',
+              fontSize: '14px'
+            }}>
+              <span>Welcome, {adminCredentials?.username}</span>
+              <button
+                onClick={handleLogout}
+                style={{
+                  padding: '8px 16px',
+                  background: 'rgba(212, 175, 55, 0.2)',
+                  color: '#D4AF37',
+                  border: '1px solid #D4AF37',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
+
+      <nav className="nav-buttons" style={{textAlign: 'center', marginTop: '20px', marginBottom: '20px'}}>
+        <button 
+          className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}
+          onClick={() => {
+            setCurrentPage('home');
+            setTimeout(() => {
+              const bookingSection = document.getElementById('booking-section');
+              if (bookingSection) {
+                bookingSection.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }, 100);
+          }}
+        >
+          Book Appointment
+        </button>
+        <button 
+          className={`nav-btn ${currentPage === 'admin' && isAuthenticated ? 'active' : ''}`}
+          onClick={handleScheduleClick}
+        >
+          {isAuthenticated ? 'Admin Panel' : 'Staff Login'}
+        </button>
+      </nav>
+
+      <main className="app-main">
+        {currentPage === 'home' && <HomePage />}
+        {currentPage === 'admin' && isAuthenticated && <AdminPage />}
+        {currentPage === 'admin' && !isAuthenticated && (
+          <div style={{
+            textAlign: 'center',
+            padding: '60px 20px',
+            color: '#666'
+          }}>
+            <h2>Access Restricted</h2>
+            <p>Please log in to access the admin panel.</p>
+            <button 
+              className="nav-btn"
+              onClick={() => setShowAdminLogin(true)}
+              style={{marginTop: '20px'}}
+            >
+              Staff Login
+            </button>
+          </div>
+        )}
+      </main>
+
+      {showAdminLogin && (
+        <AdminLogin
+          onLogin={handleLogin}
+          onClose={() => setShowAdminLogin(false)}
+        />
+      )}
+
+      <footer className="app-footer">
+        <p>&copy; 2026 SHARP CULTURE BARBERSHOP. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
