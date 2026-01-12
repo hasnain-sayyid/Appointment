@@ -79,10 +79,51 @@ const sendAppointmentEmail = async (appointment) => {
   }
 };
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://appointment-frontend.onrender.com', 'https://appointment-5lm4.onrender.com']
+    : ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get('/health', (req, res) => res.json({ status: 'ok' }));
+// Health check endpoints
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    appointments: appointments.length
+  });
+});
+
+app.get('/ping', (req, res) => {
+  res.json({ message: 'pong', timestamp: new Date().toISOString() });
+});
+
+app.get('/', (req, res) => {
+  res.json({ 
+    message: '🏪 Barber Appointment Scheduler API',
+    status: 'running',
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: '/health',
+      ping: '/ping',
+      services: '/api/services',  
+      appointments: '/api/appointments',
+      availableTimes: '/api/available-times',
+      customers: '/api/customers',
+      login: '/api/auth/login'
+    },
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    deployment: 'render-ready'
+  });
+});
 
 app.get('/api/services', (req, res) => res.json([
   { id: 1, name: 'Haircut', duration: 30, price: 25 },
