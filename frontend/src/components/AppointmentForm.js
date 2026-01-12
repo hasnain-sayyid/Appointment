@@ -10,11 +10,14 @@ const SERVICES = [
 ];
 
 function AppointmentForm({ onSubmitSuccess }) {
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+  
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
     customerEmail: '',
-    date: '',
+    date: today,
     time: '',
     service: '',
     notes: ''
@@ -24,12 +27,15 @@ function AppointmentForm({ onSubmitSuccess }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  // Load available times when date changes or component mounts with a date
+  // Load available times when component mounts and when date changes
   useEffect(() => {
-    if (formData.date) {
-      fetchAvailableTimes(formData.date);
-    }
+    fetchAvailableTimes(formData.date);
   }, [formData.date]);
+
+  // Also load times immediately on mount
+  useEffect(() => {
+    fetchAvailableTimes(today);
+  }, []);
 
   const handleDateChange = (e) => {
     const date = e.target.value;
@@ -42,13 +48,20 @@ function AppointmentForm({ onSubmitSuccess }) {
     
     setLoading(true);
     try {
+      console.log('Fetching available times for date:', date);
+      console.log('API base URL:', api.defaults.baseURL);
+      
       // For now, just return all available times (not filtered by date)
       const response = await api.get(`/api/available-times`);
+      console.log('Available times response:', response.data);
       setAvailableTimes(response.data);
+      setMessage(''); // Clear any previous error messages
     } catch (error) {
-      setMessage('Error fetching available times');
-      console.error('Error:', error);
-      setAvailableTimes([]);
+      console.error('Error fetching available times:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      setMessage('Error fetching available times. Please try refreshing the page.');
+      // Set default times as fallback
+      setAvailableTimes(['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']);
     } finally {
       setLoading(false);
     }
