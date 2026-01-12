@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 let appointments = [];
 
 // Email configuration
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'sharpculture.barbershop@gmail.com', // Demo email (you'd use environment variables in production)
